@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple API Test</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    button { padding: 10px 20px; margin: 5px; background: #0066cc; color: white; border: none; cursor: pointer; }
+    #output { background: #f0f0f0; padding: 10px; margin-top: 20px; white-space: pre-wrap; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>API Test</h1>
+  <button onclick="testGetCart()">Test GET /api/cart</button>
+  <button onclick="testAddCart()">Test POST /api/cart</button>
+  <button onclick="testHealth()">Test Health Check</button>
+  
+  <div id="output">Click a button to test...</div>
+
+  <script>
+    const output = document.getElementById('output');
+
+    async function testHealth() {
+      output.textContent = 'Testing /api/health...\n';
+      try {
+        const response = await fetch('http://localhost:4000/api/health');
+        const data = await response.json();
+        output.textContent += 'Status: ' + response.status + '\n';
+        output.textContent += 'Response: ' + JSON.stringify(data, null, 2);
+      } catch (err) {
+        output.textContent = 'ERROR: ' + err.message;
+      }
+    }
+
+    async function testGetCart() {
+      output.textContent = 'Testing GET /api/cart?userId=guest...\n';
+      try {
+        const response = await fetch('http://localhost:4000/api/cart?userId=guest');
+        const data = await response.json();
+        output.textContent += 'Status: ' + response.status + '\n';
+        output.textContent += 'Response: ' + JSON.stringify(data, null, 2);
+      } catch (err) {
+        output.textContent = 'ERROR: ' + err.message;
+      }
+    }
+
+    async function testAddCart() {
+      output.textContent = 'Testing POST /api/cart...\n';
+      try {
+        const body = {
+          userId: 'guest',
+          productId: 1,
+          title: 'Test Product',
+          price: 499,
+          qty: 1
+        };
+        output.textContent += 'Sending: ' + JSON.stringify(body, null, 2) + '\n\n';
+        
+        const response = await fetch('http://localhost:4000/api/cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await response.json();
+        output.textContent += 'Status: ' + response.status + '\n';
+        output.textContent += 'Response: ' + JSON.stringify(data, null, 2);
+      } catch (err) {
+        output.textContent = 'ERROR: ' + err.message;
+      }
+    }
+
+    // Auto test health on load
+    window.addEventListener('load', () => {
+      setTimeout(testHealth, 500);
+    });
+  </script>
+</body>
+</html>

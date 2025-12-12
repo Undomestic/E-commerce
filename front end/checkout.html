@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Infinity Castle</title>
+  <link rel="stylesheet" href="home style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root{
+      --bg: #0b0b0b;
+      --panel: #111214;
+      --muted: #b7c0cc;
+      --text: #e6ebf2;
+      --brand: #6c8cff;
+      --accent: #a2ffce;
+      --card: #17191d;
+      --card-border: #2a2e35;
+      --shadow: 0 10px 25px rgba(0,0,0,.35);
+    }
+    
+    * { box-sizing: border-box; }
+    body { 
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .checkout-container { 
+      max-width: 1200px;
+      margin: 40px auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      padding: 0 20px;
+    }
+    
+    .section { 
+      background: var(--panel);
+      padding: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+    }
+    
+    .section h2 { 
+      border-bottom: 2px solid var(--brand);
+      padding-bottom: 10px;
+      margin-top: 0;
+      color: var(--accent);
+    }
+    
+    .order-summary h3 { margin-top: 20px; color: var(--brand); }
+    .order-item { 
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text);
+    }
+    
+    .order-total { 
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--accent);
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid var(--brand);
+    }
+    
+    .payment-methods { display: flex; gap: 20px; margin: 20px 0; }
+    
+    .method-btn { 
+      flex: 1;
+      padding: 15px;
+      border: 2px solid var(--card-border);
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    .method-btn:hover { 
+      border-color: var(--brand);
+      background: rgba(108, 140, 255, 0.1);
+    }
+    
+    .method-btn.active { 
+      border-color: var(--accent);
+      background: rgba(162, 255, 206, 0.15);
+      color: var(--accent);
+    }
+    
+    .payment-form { display: none; }
+    .payment-form.active { display: block; }
+    
+    .form-group { margin: 15px 0; }
+    
+    .form-group label { 
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: var(--accent);
+    }
+    
+    .form-group input, .form-group select { 
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .form-group input::placeholder {
+      color: var(--muted);
+    }
+    
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    
+    .qr-container { 
+      text-align: center;
+      padding: 20px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    #qrcode { display: inline-block; }
+    
+    .qr-info { 
+      background: rgba(108, 140, 255, 0.15);
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 15px;
+      color: var(--brand);
+      border: 1px solid rgba(108, 140, 255, 0.3);
+    }
+    
+    .btn-primary { 
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      color: #0b0b0b;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: transform 0.3s;
+    }
+    
+    .btn-primary:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(108, 140, 255, 0.3);
+    }
+    
+    .success-message { 
+      display: none;
+      padding: 20px;
+      background: rgba(162, 255, 206, 0.15);
+      color: var(--accent);
+      border-radius: 4px;
+      margin: 10px 0;
+      border: 1px solid rgba(162, 255, 206, 0.3);
+    }
+    
+    .error-message { 
+      display: none;
+      padding: 20px;
+      background: rgba(255, 100, 100, 0.15);
+      color: #ff6464;
+      border-radius: 4px;
+      margin: 10px 0;
+      border: 1px solid rgba(255, 100, 100, 0.3);
+    }
+    
+    .loading { display: none; text-align: center; padding: 20px; }
+    
+    .spinner { 
+      border: 4px solid var(--card-border);
+      border-top: 4px solid var(--brand);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    @media (max-width: 768px) {
+      .checkout-container { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="checkout-container">
+    <!-- Order Summary -->
+    <div class="section order-summary">
+      <h2>Order Summary</h2>
+      <div id="summaryItems"></div>
+      <div class="order-total" id="orderTotal">Total: ₹0</div>
+      <button onclick="goBackToCart()" style="width: 100%; padding: 10px; margin-top: 20px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">
+        ← Back to Cart
+      </button>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="section payment-section">
+      <h2>Payment Method</h2>
+      
+      <div class="payment-methods">
+        <button class="method-btn active" onclick="selectPaymentMethod('qr')">
+          📱 QR Code
+        </button>
+        <button class="method-btn" onclick="selectPaymentMethod('card')">
+          💳 Card Payment
+        </button>
+      </div>
+
+      <!-- QR Code Payment -->
+      <div id="qr-payment" class="payment-form active">
+        <div class="qr-container">
+          <h3>Scan to Pay</h3>
+          <div id="qrcode"></div>
+          <div class="qr-info">
+            <strong>📌 UPI/QR Instructions:</strong><br>
+            Use any UPI app (Google Pay, PhonePe, Paytm) to scan this QR code and complete payment.
+          </div>
+          <div style="margin-top: 15px;">
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="qrConfirmation" style="width: auto;">
+              <span>I have completed the payment</span>
+            </label>
+          </div>
+          <button class="btn-primary" onclick="completeQRPayment()">Confirm Payment</button>
+        </div>
+      </div>
+
+      <!-- Card Payment -->
+      <div id="card-payment" class="payment-form">
+        <form onsubmit="handleCardPayment(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="cardName" placeholder="John Doe" required>
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="cardEmail" placeholder="john@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label>Card Number</label>
+            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Expiry (MM/YY)</label>
+              <input type="text" id="cardExpiry" placeholder="12/25" maxlength="5" required>
+            </div>
+            <div class="form-group">
+              <label>CVV</label>
+              <input type="text" id="cardCVV" placeholder="123" maxlength="3" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Billing Address</label>
+            <input type="text" id="cardAddress" placeholder="123 Main St" required>
+          </div>
+
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" id="cardCity" placeholder="New York" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>State</label>
+              <input type="text" id="cardState" placeholder="NY" required>
+            </div>
+            <div class="form-group">
+              <label>ZIP Code</label>
+              <input type="text" id="cardZip" placeholder="10001" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary">Pay ₹<span id="payAmount">0</span></button>
+        </form>
+      </div>
+
+      <div class="error-message" id="errorMessage"></div>
+      <div class="success-message" id="successMessage"></div>
+      <div class="loading" id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Processing payment...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="cart.js"></script>
+  <script>
+    let totalAmount = 0;
+    let cartItems = [];
+
+    // Initialize checkout
+    async function initializeCheckout() {
+      cartItems = await cart.getCart();
+      
+      if (!cartItems.length) {
+        document.querySelector('.checkout-container').innerHTML = '<p style="grid-column: 1/-1; text-align: center; font-size: 18px;">Cart is empty. <a href="cart.html">Go back to cart</a></p>';
+        return;
+      }
+
+      // Calculate total
+      totalAmount = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+      // Render order summary
+      const summaryHTML = cartItems.map(item => `
+        <div class="order-item">
+          <span>${item.title} x ${item.qty}</span>
+          <span>₹${item.price * item.qty}</span>
+        </div>
+      `).join('');
+      document.getElementById('summaryItems').innerHTML = summaryHTML;
+      document.getElementById('orderTotal').textContent = `Total: ₹${totalAmount}`;
+      document.getElementById('payAmount').textContent = totalAmount;
+
+      // Generate QR Code (simulated UPI link)
+      generateQRCode();
+    }
+
+    function generateQRCode() {
+      // Simulated UPI string (in real app, this would be a valid UPI URL)
+      const upiString = `upi://pay?pa=shop@upi&pn=InfinityCastle&am=${totalAmount}&tn=Payment`;
+      document.getElementById('qrcode').innerHTML = '';
+      new QRCode(document.getElementById('qrcode'), {
+        text: upiString,
+        width: 200,
+        height: 200
+      });
+    }
+
+    function selectPaymentMethod(method) {
+      // Update buttons
+      document.querySelectorAll('.method-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Toggle forms
+      document.getElementById('qr-payment').classList.remove('active');
+      document.getElementById('card-payment').classList.remove('active');
+      document.getElementById(method + '-payment').classList.add('active');
+    }
+
+    function completeQRPayment() {
+      if (!document.getElementById('qrConfirmation').checked) {
+        showError('Please confirm that you have completed the payment');
+        return;
+      }
+      processPayment('qr');
+    }
+
+    function handleCardPayment(event) {
+      event.preventDefault();
+      
+      // Validate card details
+      const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      if (cardNumber.length !== 16) {
+        showError('Card number must be 16 digits');
+        return;
+      }
+
+      const expiry = document.getElementById('cardExpiry').value;
+      if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+        showError('Expiry must be in MM/YY format');
+        return;
+      }
+
+      const cvv = document.getElementById('cardCVV').value;
+      if (cvv.length !== 3) {
+        showError('CVV must be 3 digits');
+        return;
+      }
+
+      processPayment('card');
+    }
+
+    async function processPayment(method) {
+      showLoading(true);
+      clearMessages();
+
+      try {
+        const paymentData = {
+          method: method,
+          amount: totalAmount,
+          items: cartItems,
+          customer_name: document.getElementById('cardName')?.value || 'Guest',
+          customer_email: document.getElementById('cardEmail')?.value || 'guest@example.com'
+        };
+
+        if (method === 'card') {
+          paymentData.card = {
+            number: document.getElementById('cardNumber').value,
+            expiry: document.getElementById('cardExpiry').value,
+            cvv: document.getElementById('cardCVV').value,
+            address: document.getElementById('cardAddress').value,
+            city: document.getElementById('cardCity').value,
+            state: document.getElementById('cardState').value,
+            zip: document.getElementById('cardZip').value
+          };
+        }
+
+        // Send to backend
+        const response = await fetch('http://localhost:4000/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(paymentData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Clear cart
+          await fetch(`http://localhost:4000/api/cart/clear`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: cart.userId })
+          });
+
+          showSuccess(`Payment successful! Order ID: ${data.orderId || 'PENDING'}`);
+          
+          // Redirect to success page after 2 seconds
+          setTimeout(() => {
+            window.location.href = 'success.html';
+          }, 2000);
+        } else {
+          showError(data.error || 'Payment failed');
+        }
+      } catch (err) {
+        console.error('Payment error:', err);
+        showError('Payment processing error: ' + err.message);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    function showError(message) {
+      const elem = document.getElementById('errorMessage');
+      elem.textContent = '❌ ' + message;
+      elem.style.display = 'block';
+    }
+
+    function showSuccess(message) {
+      const elem = document.getElementById('successMessage');
+      elem.textContent = '✅ ' + message;
+      elem.style.display = 'block';
+    }
+
+    function clearMessages() {
+      document.getElementById('errorMessage').style.display = 'none';
+      document.getElementById('successMessage').style.display = 'none';
+    }
+
+    function showLoading(show) {
+      document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+    }
+
+    function goBackToCart() {
+      window.location.href = 'cart.html';
+    }
+
+    // Initialize on load
+    window.addEventListener('load', initializeCheckout);
+  </script>
+</body>
+</html>

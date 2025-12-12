@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add to Cart Test</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    .test-product { border: 1px solid #ddd; padding: 20px; margin: 10px 0; }
+    .price { color: green; font-size: 18px; font-weight: bold; }
+    button { padding: 10px 20px; background: #0066cc; color: white; border: none; cursor: pointer; margin: 5px; }
+    #cart-output { background: #f0f0f0; padding: 10px; margin-top: 20px; }
+    #console-output { background: #f0f0f0; padding: 10px; margin-top: 20px; font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto; }
+    .log-entry { margin: 5px 0; padding: 5px; border-bottom: 1px solid #ddd; }
+    .error { color: red; }
+    .success { color: green; }
+  </style>
+</head>
+<body>
+  <h1>Add to Cart Test</h1>
+  
+  <div class="test-product">
+    <h2>Test T-Shirt</h2>
+    <div class="price">₹499</div>
+    <input type="number" class="qty-input" value="1" min="1" style="width: 50px; padding: 5px;">
+    <button onclick="testAddToCart()">Add to Cart</button>
+  </div>
+
+  <div id="cart-output">
+    <h3>Cart Contents:</h3>
+    <button onclick="loadCart()">Load Cart</button>
+    <button onclick="clearCart()">Clear Cart</button>
+    <pre id="cart-content">Click "Load Cart" to see contents</pre>
+  </div>
+
+  <div id="console-output">
+    <h3>Console Output:</h3>
+    <div id="logs"></div>
+  </div>
+
+  <script src="cart.js"></script>
+  <script>
+    const logsContainer = document.getElementById('logs');
+    
+    function log(message, type = 'info') {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry ' + type;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${type.toUpperCase()}: ${message}`;
+      logsContainer.appendChild(entry);
+      console.log(`[${type.toUpperCase()}] ${message}`);
+    }
+
+    // Override console methods
+    const originalLog = console.log;
+    const originalError = console.error;
+    console.log = function(...args) {
+      log(args.join(' '), 'log');
+      originalLog.apply(console, args);
+    };
+    console.error = function(...args) {
+      log(args.join(' '), 'error');
+      originalError.apply(console, args);
+    };
+
+    log('Cart object loaded: ' + (typeof cart !== 'undefined' ? 'YES' : 'NO'), typeof cart !== 'undefined' ? 'success' : 'error');
+    log('addProductToCart function: ' + (typeof addProductToCart !== 'undefined' ? 'YES' : 'NO'), typeof addProductToCart !== 'undefined' ? 'success' : 'error');
+
+    function testAddToCart() {
+      log('Test button clicked');
+      const qty = document.querySelector('.qty-input').value;
+      log('Adding product: id=1, title=Test T-Shirt, price=499, qty=' + qty);
+      cart.addToCart(1, 'Test T-Shirt', 499, parseInt(qty));
+    }
+
+    async function loadCart() {
+      log('Loading cart...');
+      const items = await cart.getCart();
+      log('Cart contains ' + items.length + ' items', 'success');
+      document.getElementById('cart-content').textContent = JSON.stringify(items, null, 2);
+    }
+
+    async function clearCart() {
+      log('Clearing cart...');
+      const userId = cart.userId;
+      try {
+        const response = await fetch('http://localhost:4000/api/cart/clear', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId })
+        });
+        const data = await response.json();
+        log('Cart cleared: ' + data.message, 'success');
+        loadCart();
+      } catch (err) {
+        log('Error clearing cart: ' + err.message, 'error');
+      }
+    }
+
+    log('Page loaded successfully', 'success');
+  </script>
+</body>
+</html>

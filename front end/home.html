@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Castle | Home</title>
+    <link rel="stylesheet" href="home style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-row">
+            <a href="#" class="brand" aria-label="Homepage">
+                <span class="logo">∞</span>
+                <span class="brand-name">Infinity Castle</span>
+            </a>
+
+            <form class="search" role="search">
+                <input type="search" placeholder="Search products..." aria-label="Search">
+                <button type="submit" aria-label="Submit search">🔍</button>
+            </form>
+
+            <div class="actions">
+                <label class="language">
+                    <span>Language</span>
+                    <select aria-label="Language">
+                        <option>EN</option>
+                        <option>ES</option>
+                        <option>FR</option>
+                        <option>HI</option>
+                    </select>
+                </label>
+                <a href="../form/login.html" class="link">Hello, sign in</a>
+                <a href="#" class="link">Returns & Orders</a>
+                <a href="cart.html" class="cart" aria-label="Cart">🛒</a>
+                <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+            </div>
+        </div>
+
+        <nav class="mobile-drawer" aria-label="Mobile">
+            <a href="#">Home</a>
+            <a href="#tshirts">T‑Shirts</a>
+            <a href="#pants">Pants / Lowers</a>
+            <a href="#accessories">Accessories</a>
+            <a href="#about">About Us</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" aria-label="Intro video">
+            <div class="hero-media">
+                <video class="hero-video" autoplay muted loop playsinline
+                    poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 675'%3E%3Crect width='1200' height='675' fill='%230b0b0b'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='48' fill='%23ffffff'%3EInfinity Castle%3C/text%3E%3C/svg%3E">
+                    <source src="Timeline 1.mov" type="video/mp4">
+                </video>
+            </div>
+        </section>
+
+        <section class="categories container" aria-label="Shop categories">
+            <a id="tshirts" class="card" href="branches/T-shirts.html">
+                <div class="card-body">
+                    <h3>T‑Shirts</h3>
+                    <p>Half‑sleeves / Full‑sleeves / Sleeveless</p>
+                </div>
+            </a>
+
+            <a id="pants" class="card" href="branches/Pants.html">
+                <div class="card-body">
+                    <h3>Pants / Lowers</h3>
+                    <p>Comfortable fits for every day</p>
+                </div>
+            </a>
+
+            <a id="accessories" class="card" href="branches/Accessories.html">
+                <div class="card-body">
+                    <h3>Accessories</h3>
+                    <p>Caps, Socks, Keychains and more</p>
+                </div>
+            </a>
+        </section>
+
+        <section id="about" class="about">
+            <div class="container">
+                <h2>About Us</h2>
+                <p>
+                    We craft everyday essentials with quality fabrics and clean designs.
+                    Explore categories
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <small>© <span id="year"></span> Infinity Castle. All rights reserved.</small>
+        </div>
+    </footer>
+
+    <script>
+        const navToggle = document.querySelector(".nav-toggle");
+        const drawer = document.querySelector(".mobile-drawer");
+        const search = document.querySelector(".search input");
+        const year = document.getElementById("year");
+
+        navToggle.addEventListener("click", () => {
+            drawer.classList.toggle("open");
+            navToggle.classList.toggle("active");
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!drawer.contains(e.target) && !navToggle.contains(e.target)) {
+                drawer.classList.remove("open");
+                navToggle.classList.remove("active");
+            }
+        });
+
+        document.querySelector(".search").addEventListener("submit", (e) => {
+            e.preventDefault();
+            alert("Searching for: " + search.value.trim());
+        });
+
+        year.textContent = new Date().getFullYear();
+        (function () {
+	const welcome = document.getElementById('welcomeArea');
+	const dataArea = document.getElementById('userDataArea');
+	const logoutBtn = document.getElementById('logoutBtn');
+
+	function renderTable(obj) {
+		const entries = Object.entries(obj).filter(([k,v]) => v !== null && v !== undefined && v !== '');
+		if (!entries.length) return '';
+		const rows = entries.map(([k,v]) => {
+			const val = (k === 'lastLoginAt') ? new Date(v).toLocaleString() : v;
+			return '<tr><th style="text-align:left;padding:6px 10px;border-bottom:1px solid #ddd;">' + k + '</th><td style="padding:6px 10px;border-bottom:1px solid #ddd;">' + val + '</td></tr>';
+		}).join('');
+		return '<table style="border-collapse:collapse;margin:10px 0;min-width:260px;">' + rows + '</table>';
+	}
+
+	async function fetchMe() {
+		try {
+			const res = await fetch('/api/me');
+			if (!res.ok) throw new Error('not logged in');
+			const user = await res.json();
+			welcome.innerHTML = 'Welcome back, <strong>' + (user.fullName || user.username) + '</strong>!';
+			dataArea.innerHTML = renderTable(user);
+			logoutBtn.style.display = '';
+		} catch {
+			welcome.innerHTML = 'Hello! Please <a href="form/login.html">log in</a>.';
+			dataArea.innerHTML = '';
+			logoutBtn.style.display = 'none';
+		}
+	}
+
+	logoutBtn.addEventListener('click', async () => {
+		try {
+			await fetch('/api/logout', { method: 'POST' });
+		} finally {
+			fetchMe();
+		}
+	});
+
+	fetchMe();
+})();
+    </script>
+</body>
+</html>

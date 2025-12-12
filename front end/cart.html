@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shopping Cart</title>
+  <link rel="stylesheet" href="home style.css">
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --panel: #111214;
+      --brand: #6c8cff;
+      --accent: #a2ffce;
+      --text: #e6ebf2;
+      --card-border: #2a2e35;
+    }
+    
+    body { font-family: Arial, sans-serif; background: var(--bg); margin: 0; color: var(--text); }
+    .cart-container { max-width: 900px; margin: 40px auto; padding: 20px; background: var(--panel); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 1px solid var(--card-border); }
+    h1 { color: var(--accent); border-bottom: 2px solid var(--brand); padding-bottom: 10px; }
+    .cart-items { margin: 20px 0; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--card-border); background: rgba(108, 140, 255, 0.05); border-radius: 4px; margin-bottom: 10px; }
+    .item-info { flex: 1; }
+    .item-title { font-weight: bold; color: var(--text); margin: 0; }
+    .item-price { color: var(--brand); margin: 5px 0 0 0; }
+    .item-controls { display: flex; gap: 10px; align-items: center; }
+    .qty-input { width: 60px; padding: 5px; border: 1px solid var(--card-border); border-radius: 4px; background: #1a1d24; color: var(--text); }
+    .btn-remove { padding: 5px 10px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .btn-remove:hover { background: #c0392b; }
+    .cart-empty { text-align: center; padding: 40px; color: #999; }
+    .cart-summary { background: rgba(108, 140, 255, 0.1); padding: 20px; border-radius: 8px; margin-top: 30px; border: 1px solid var(--card-border); }
+    .summary-item { display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; color: var(--text); }
+    .summary-total { font-size: 24px; font-weight: bold; color: var(--accent); border-top: 2px solid var(--brand); padding-top: 15px; margin-top: 15px; }
+    .buttons { display: flex; gap: 10px; margin-top: 20px; }
+    .btn { flex: 1; padding: 12px; border: none; font-size: 16px; border-radius: 4px; cursor: pointer; }
+    .btn-checkout { background: linear-gradient(135deg, var(--brand), var(--accent)); color: #0b0b0b; font-weight: bold; }
+    .btn-checkout:hover { opacity: 0.9; }
+    .btn-continue { background: rgba(162, 255, 206, 0.1); color: var(--accent); border: 1px solid var(--accent); }
+    .btn-continue:hover { background: rgba(162, 255, 206, 0.2); }
+    @media (max-width: 600px) { .cart-item { flex-direction: column; } .item-controls { flex-direction: column; width: 100%; margin-top: 10px; } }
+  </style>
+</head>
+<body>
+  <div class="cart-container">
+    <h1>🛒 Shopping Cart</h1>
+    <div id="cartItems" class="cart-items"></div>
+    
+    <div class="cart-summary">
+      <div class="summary-item">
+        <span>Subtotal:</span>
+        <span id="subtotal">₹0</span>
+      </div>
+      <div class="summary-item">
+        <span>Tax (0%):</span>
+        <span>₹0</span>
+      </div>
+      <div class="summary-total">
+        <span>Total: </span>
+        <span id="cartTotal">₹0</span>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button class="btn btn-checkout" onclick="proceedToCheckout()" id="checkoutBtn" style="cursor: pointer;">
+        Proceed to Checkout →
+      </button>
+      <button class="btn btn-continue" onclick="continueShopping()">
+        Continue Shopping
+      </button>
+    </div>
+  </div>
+
+  <script src="cart.js"></script>
+  <script>
+    async function renderCart() {
+      const items = await cart.getCart();
+      const container = document.getElementById('cartItems');
+      const checkoutBtn = document.getElementById('checkoutBtn');
+
+      if (!items.length) {
+        container.innerHTML = '<div class="cart-empty"><p>Your cart is empty</p><p><a href="branches/T-shirts.html" style="color: var(--accent);">Start shopping →</a></p></div>';
+        document.getElementById('subtotal').textContent = '₹0';
+        document.getElementById('cartTotal').textContent = '₹0';
+        checkoutBtn.disabled = true;
+        checkoutBtn.style.opacity = '0.5';
+        checkoutBtn.style.cursor = 'not-allowed';
+        return;
+      }
+
+      let total = 0;
+      container.innerHTML = items.map(item => {
+        const itemTotal = item.price * item.qty;
+        total += itemTotal;
+        return `
+          <div class="cart-item">
+            <div class="item-info">
+              <p class="item-title">${item.title}</p>
+              <p class="item-price">₹${item.price} per unit</p>
+            </div>
+            <div class="item-controls">
+              <div style="text-align: right;">
+                <input type="number" class="qty-input" value="${item.qty}" min="1" onchange="updateItem(${item.productId}, this.value)">
+                <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Qty: ${item.qty}</p>
+              </div>
+              <div style="text-align: right;">
+                <p style="margin: 0; font-weight: bold;">₹${itemTotal}</p>
+                <button class="btn-remove" onclick="removeItem(${item.productId})">Remove</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('subtotal').textContent = '₹' + total;
+      document.getElementById('cartTotal').textContent = '₹' + total;
+      
+      checkoutBtn.disabled = false;
+      checkoutBtn.style.opacity = '1';
+      checkoutBtn.style.cursor = 'pointer';
+    }
+
+    async function updateItem(productId, qty) {
+      const newQty = parseInt(qty);
+      if (newQty <= 0) {
+        removeItem(productId);
+        return;
+      }
+      await cart.updateQuantity(productId, newQty);
+      renderCart();
+    }
+
+    async function removeItem(productId) {
+      await cart.removeFromCart(productId);
+      renderCart();
+    }
+
+    function proceedToCheckout() {
+      window.location.href = 'checkout.html';
+    }
+
+    function continueShopping() {
+      window.location.href = 'branches/T-shirts.html';
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
