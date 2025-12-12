@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessories</title>
+    <link rel="stylesheet" href="accessoriesstyle.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-row">
+            <a href="#" class="brand" aria-label="Homepage">
+                <span class="logo">∞</span>
+                <span class="brand-name">Infinity Castle</span>
+            </a>
+<select class="nav-dropdown" onchange="location.href=this.value">
+    <option disabled selected>Select Category</option>
+    <option value="../home.html">Home</option>
+    <option value="T-shirts.html">T-Shirts/Hoodies</option>
+    <option value="Pants.html">Lowers</option>
+ </select>
+            <div class="actions">
+                <label class="language">
+                    <span>Language</span>
+                    <select aria-label="Language">
+                        <option>EN</option>
+                        <option>ES</option>
+                        <option>FR</option>
+                        <option>HI</option>
+                    </select>
+                </label>
+                <a href="../form/login.html" class="link">Hello, sign in</a>
+                <a href="#" class="link">Returns & Orders</a>
+                <a href="../cart.html" class="cart" aria-label="Cart">🛒</a>
+                <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+            </div>
+        </div>
+
+        <nav class="mobile-drawer" aria-label="Mobile">
+            <a href="../home.html">Home</a>
+            <a href="#tshirts">T‑Shirts</a>
+            <a href="#pants">Pants / Lowers</a>
+            <a href="#accessories">Accessories</a>
+            <a href="#about">About Us</a>
+        </nav>
+    </header>
+    
+    <div class="head"><h1>Welcome to Accessories</h1>
+    <p>Your one-stop shop for stylish accessories.</p></div>
+   
+    <div class="listProduct" id="productList">
+        <!-- Static Product Cards -->
+        <div class="product-card item" data-product-id="21">
+            <img src="http://localhost:4000/images/Accessories/21.jpg" alt="Haikyuu Socks" onerror="this.onerror=null; this.src='http://localhost:4000/images/Accessories/21.jpg';">
+            <h2>Dragon Ball Z Goku Socks</h2>
+            <div class="price">₹199</div>
+            <div style="margin: 10px 0;">
+                <button onclick="loadRecommendations(21)" style="margin-right: 5px; padding: 6px 12px; background: linear-gradient(135deg, var(--brand), var(--accent)); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                    ✨ Outfit Match
+                </button>
+            </div>
+            <input type="number" class="qty-input" value="1" min="1" style="width: 50px; padding: 5px; background: var(--card); color: var(--text); border: 1px solid var(--card-border); border-radius: 4px;">
+            <button class="add-to-cart-btn" onclick="addProductToCart(this)" style="margin-top: 10px; padding: 8px 16px; background: var(--brand); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+                Add to Cart
+            </button>
+        </div>
+
+        <div class="product-card item" data-product-id="22">
+            <img src="http://localhost:4000/images/Accessories/22.jpg" alt="Spy x Family Cap" onerror="this.onerror=null; this.src='http://localhost:4000/images/Accessories/22.jpg';">
+            <h2>Scout Regiment Attack on Titan Cap</h2>
+            <div class="price">₹399</div>
+            <div style="margin: 10px 0;">
+                <button onclick="loadRecommendations(22)" style="margin-right: 5px; padding: 6px 12px; background: linear-gradient(135deg, var(--brand), var(--accent)); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                    ✨ Outfit Match
+                </button>
+            </div>
+            <input type="number" class="qty-input" value="1" min="1" style="width: 50px; padding: 5px; background: var(--card); color: var(--text); border: 1px solid var(--card-border); border-radius: 4px;">
+            <button class="add-to-cart-btn" onclick="addProductToCart(this)" style="margin-top: 10px; padding: 8px 16px; background: var(--brand); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+                Add to Cart
+            </button>
+        </div>
+
+        <div class="product-card item" data-product-id="23">
+            <img src="http://localhost:4000/images/Accessories/23.jpg" alt="Chainsaw Man Beanie" onerror="this.onerror=null; this.src='http://localhost:4000/images/Accessories/23.jpg';">
+            <h2>Chainsaw Man Beanie</h2>
+            <div class="price">₹299</div>
+            <div style="margin: 10px 0;">
+                <button onclick="loadRecommendations(23)" style="margin-right: 5px; padding: 6px 12px; background: linear-gradient(135deg, var(--brand), var(--accent)); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                    ✨ Outfit Match
+                </button>
+            </div>
+            <input type="number" class="qty-input" value="1" min="1" style="width: 50px; padding: 5px; background: var(--card); color: var(--text); border: 1px solid var(--card-border); border-radius: 4px;">
+            <button class="add-to-cart-btn" onclick="addProductToCart(this)" style="margin-top: 10px; padding: 8px 16px; background: var(--brand); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+                Add to Cart
+            </button>
+        </div>
+
+        <div class="product-card item" data-product-id="24">
+            <img src="http://localhost:4000/images/Accessories/24.jpg" alt="Vinland Saga Belt" onerror="this.onerror=null; this.src='http://localhost:4000/images/Accessories/24.jpg';">
+            <h2>Flame Hashira Belt</h2>
+            <div class="price">₹499</div>
+            <div style="margin: 10px 0;">
+                <button onclick="loadRecommendations(24)" style="margin-right: 5px; padding: 6px 12px; background: linear-gradient(135deg, var(--brand), var(--accent)); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                    ✨ Outfit Match
+                </button>
+            </div>
+            <input type="number" class="qty-input" value="1" min="1" style="width: 50px; padding: 5px; background: var(--card); color: var(--text); border: 1px solid var(--card-border); border-radius: 4px;">
+            <button class="add-to-cart-btn" onclick="addProductToCart(this)" style="margin-top: 10px; padding: 8px 16px; background: var(--brand); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+                Add to Cart
+            </button>
+        </div>
+
+        <div class="product-card item" data-product-id="25">
+            <img src="http://localhost:4000/images/Accessories/25.jpg" alt="Evangelion Sunglasses" onerror="this.onerror=null; this.src='http://localhost:4000/images/Accessories/25.jpg';">
+            <h2>Bleach Vasto Lorde Ichigo Beanie</h2>
+            <div class="price">₹799</div>
+            <div style="margin: 10px 0;">
+                <button onclick="loadRecommendations(25)" style="margin-right: 5px; padding: 6px 12px; background: linear-gradient(135deg, var(--brand), var(--accent)); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                    ✨ Outfit Match
+                </button>
+            </div>
+            <input type="number" class="qty-input" value="1" min="1" style="width: 50px; padding: 5px; background: var(--card); color: var(--text); border: 1px solid var(--card-border); border-radius: 4px;">
+            <button class="add-to-cart-btn" onclick="addProductToCart(this)" style="margin-top: 10px; padding: 8px 16px; background: var(--brand); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+                Add to Cart
+            </button>
+        </div>
+
+        <div class="product-card item" data-product-id="26">
+            <img src="http://localhost:4000/images/Accessories/26.jpg" alt="Gintama Sports Watch" onerror="this.onerror=null; this.src='http://localhost:4000/images/Accessories/26.jpg';">
+            <h2>Naruto Shippuden hidden leaf Headband</h2>
+            <div class="price">₹1499</div>
+            <div style="margin: 10px 0;">
+                <button onclick="loadRecommendations(26)" style="margin-right: 5px; padding: 6px 12px; background: linear-gradient(135deg, var(--brand), var(--accent)); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                    ✨ Outfit Match
+                </button>
+            </div>
+            <input type="number" class="qty-input" value="1" min="1" style="width: 50px; padding: 5px; background: var(--card); color: var(--text); border: 1px solid var(--card-border); border-radius: 4px;">
+            <button class="add-to-cart-btn" onclick="addProductToCart(this)" style="margin-top: 10px; padding: 8px 16px; background: var(--brand); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+                Add to Cart
+            </button>
+        </div>
+
+        <div class="product-card item" data-product-id="27">
+            <img src="http://localhost:4000/images/Accessories/27.jpg" alt="Natsume Yuujinchou Wallet" onerror="this.onerror=null; this.src='http://localhost:4000/images/Accessories/27.jpg';">
+            <h2>My hero Academia - Deku Beanie</h2>
+            <div class="price">₹599</div>
+            <div style="margin: 10px 0;">
+                <button onclick="loadRecommendations(27)" style="margin-right: 5px; padding: 6px 12px; background: linear-gradient(135deg, var(--brand), var(--accent)); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                    ✨ Outfit Match
+                </button>
+            </div>
+            <input type="number" class="qty-input" value="1" min="1" style="width: 50px; padding: 5px; background: var(--card); color: var(--text); border: 1px solid var(--card-border); border-radius: 4px;">
+            <button class="add-to-cart-btn" onclick="addProductToCart(this)" style="margin-top: 10px; padding: 8px 16px; background: var(--brand); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+                Add to Cart
+            </button>
+        </div>
+
+        <div class="product-card item" data-product-id="28">
+            <img src="http://localhost:4000/images/Accessories/28.jpg" alt="A Place Further Keychain" onerror="this.onerror=null; this.src='http://localhost:4000/images/Accessories/28.jpg';">
+            <h2>Jujutsu Kaisen Cursed Socks</h2>
+            <div class="price">₹149</div>
+            <div style="margin: 10px 0;">
+                <button onclick="loadRecommendations(28)" style="margin-right: 5px; padding: 6px 12px; background: linear-gradient(135deg, var(--brand), var(--accent)); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                    ✨ Outfit Match
+                </button>
+            </div>
+            <input type="number" class="qty-input" value="1" min="1" style="width: 50px; padding: 5px; background: var(--card); color: var(--text); border: 1px solid var(--card-border); border-radius: 4px;">
+            <button class="add-to-cart-btn" onclick="addProductToCart(this)" style="margin-top: 10px; padding: 8px 16px; background: var(--brand); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">
+                Add to Cart
+            </button>
+        </div>
+    </div>
+
+    <!-- Recommendations Section -->
+    <div id="recommendationsSection" style="display: none; margin-top: 40px; padding: 20px; background: var(--panel); border: 1px solid var(--card-border); border-radius: 8px; margin-left: 20px; margin-right: 20px;">
+        <h2 style="border-bottom: 2px solid var(--brand); padding-bottom: 10px; color: var(--accent); margin-top: 0;">✨ Outfit Suggestions - What to Pair With This</h2>
+        <p id="outfitTip" style="color: var(--muted); margin-bottom: 15px;"></p>
+        <div class="listProduct" id="recommendationsList">
+            <!-- Recommendations will be loaded here -->
+        </div>
+    </div>
+      
+
+    
+    <script src="../cart.js"></script>
+    <script>
+        const navToggle = document.querySelector(".nav-toggle");
+        const drawer = document.querySelector(".mobile-drawer");
+        let currentProductId = null;
+
+        navToggle.addEventListener("click", () => {
+            drawer.classList.toggle("open");
+            navToggle.classList.toggle("active");
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!drawer.contains(e.target) && !navToggle.contains(e.target)) {
+                drawer.classList.remove("open");
+                navToggle.classList.remove("active");
+            }
+        });
+
+        // Load recommendations for a product
+        async function loadRecommendations(productId) {
+            try {
+                const response = await fetch(`http://localhost:4000/api/recommendations/${productId}`);
+                const data = await response.json();
+                
+                const section = document.getElementById('recommendationsSection');
+                const tipEl = document.getElementById('outfitTip');
+                const recList = document.getElementById('recommendationsList');
+
+                if (!section || !tipEl || !recList) return;
+
+                if (!data.suggestions || data.suggestions.length === 0) {
+                    tipEl.textContent = "No outfit matches found for this item!";
+                    recList.innerHTML = "";
+                    return;
+                }
+
+                currentProductId = productId;
+                tipEl.textContent = `Complete your "${data.product.name}" with these perfect matches!`;
+                
+                recList.innerHTML = data.suggestions.map(rec => {
+                    const id = Number(rec.id);
+                    let categoryFolder = "T-Shirts";
+                    if (!Number.isNaN(id)) {
+                        if (id >= 1 && id <= 8) categoryFolder = "T-Shirts";
+                        else if (id >= 11 && id <= 18) categoryFolder = "Pants";
+                        else if (id >= 21 && id <= 28) categoryFolder = "Accessories";
+                    } else if (rec.category) {
+                        const cat = rec.category.toLowerCase();
+                        if (cat.includes("shirt") || cat.includes("tee")) categoryFolder = "T-Shirts";
+                        else if (cat.includes("pants") || cat.includes("lower")) categoryFolder = "Pants";
+                        else if (cat.includes("accessories")) categoryFolder = "Accessories";
+                    }
+
+                    const imageId = !Number.isNaN(id) ? id : (rec.name || 'product').toLowerCase().replace(/\s+/g, '-');
+                    const imageUrl = `http://localhost:4000/images/${categoryFolder}/${imageId}.jpg`;
+                    const recName = rec.name || "Product";
+
+                    return `
+                        <div class="product-card item" data-product-id="${rec.id}">
+                            <img src="${imageUrl}" alt="${recName}">
+                            <h2>${recName}</h2>
+                            <div style="color: var(--brand); font-size: 12px; margin:8px 0;">${rec.outfit_tip || ''}</div>
+                            <div class="price">₹${rec.price}</div>
+                            <input type="number" class="qty-input" value="1" min="1" style="width: 50px; padding: 5px; background: var(--card); color: var(--text); border: 1px solid var(--card-border); border-radius: 4px;">
+                            <button class="add-to-cart-btn" onclick="addProductToCart(this)" style="margin-top: 10px; padding: 8px 16px; background: var(--brand); color: #0b0b0b; border: none; cursor: pointer; border-radius: 4px; font-weight: bold;">Add Match to Cart</button>
+                        </div>
+                    `;
+                }).join('');
+                
+                section.style.display = 'block';
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (err) {
+                console.error('Error loading recommendations:', err);
+            }
+        }
+    </script>
+</body>
+</html>
